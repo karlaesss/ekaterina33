@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2a0d15">
+<title>Para Ekaterina</title>
+<meta name="description" content="Una invitación especial para Ekaterina Shion.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --wine-900: #1f0910;
+    --wine-800: #2a0d15;
+    --wine-700: #3d1320;
+    --wine-600: #5b1a2b;
+    --wine-500: #7a2639;
+    --rose: #c9818c;
+    --gold: #d6b67e;
+    --gold-soft: #e8d3a8;
+    --cream: #f6ecdc;
+    --cream-dim: rgba(246, 236, 220, .72);
+    --line: rgba(214, 182, 126, .28);
+    --card: rgba(61, 19, 32, .55);
+    --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+    --sans: "Jost", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --ease: cubic-bezier(.22, .8, .24, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    min-height: 100vh;
+    background: radial-gradient(120% 80% at 50% 0%, #4a1626 0%, var(--wine-800) 55%, var(--wine-900) 100%) fixed;
+    background-color: var(--wine-800);
+    color: var(--cream);
+    font-family: var(--sans);
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body.locked { overflow: hidden; height: 100vh; }
+
+  svg.ico { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+
+  #particles { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 60; }
+
+  /* ---------- Sobre ---------- */
+  #intro {
+    position: fixed; inset: 0; z-index: 50;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 36px; padding: 24px 16px;
+    background: radial-gradient(90% 60% at 50% 45%, rgba(122, 38, 57, .55), transparent 70%);
+    transition: opacity .9s var(--ease), visibility .9s;
+  }
+  #intro.gone { opacity: 0; visibility: hidden; pointer-events: none; }
+
+  .env-btn {
+    background: none; border: 0; cursor: pointer; color: inherit; font: inherit;
+    display: flex; flex-direction: column; align-items: center; gap: 34px;
+    animation: float 4.5s ease-in-out infinite;
+  }
+  .env-btn:focus-visible { outline: 1px solid var(--gold); outline-offset: 10px; border-radius: 8px; }
+  #intro.open .env-btn { animation: none; }
+
+  .envelope {
+    position: relative;
+    width: min(78vw, 320px);
+    aspect-ratio: 1.45;
+    perspective: 900px;
+    filter: drop-shadow(0 22px 40px rgba(0, 0, 0, .45));
+  }
+  .env-back {
+    position: absolute; inset: 0; border-radius: 6px;
+    background: linear-gradient(160deg, #6a2033, #4a1424);
+  }
+  .letter {
+    position: absolute; left: 7%; right: 7%; top: 6%; height: 88%;
+    background: linear-gradient(180deg, #fbf4e8, #f1e3cb);
+    border-radius: 4px; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    padding-top: 12%;
+    color: var(--wine-600);
+    transition: transform 1s var(--ease) .55s;
+  }
+  .letter .l-num { font-family: var(--serif); font-size: clamp(38px, 12vw, 52px); line-height: 1; font-weight: 500; }
+  .letter .l-line { width: 38%; height: 1px; background: var(--gold); margin: 10px 0 8px; }
+  .letter .l-sub { font-family: var(--serif); font-style: italic; font-size: 15px; }
+  .env-pocket {
+    position: absolute; inset: 0; z-index: 3; border-radius: 6px;
+    background: linear-gradient(170deg, #822a3f 0%, #6a2033 60%, #5b1a2b 100%);
+    clip-path: polygon(0 0, 50% 56%, 100% 0, 100% 100%, 0 100%);
+  }
+  .env-pocket::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(to top right, transparent 49.6%, rgba(214, 182, 126, .25) 50%, transparent 50.4%),
+                linear-gradient(to top left, transparent 49.6%, rgba(214, 182, 126, .25) 50%, transparent 50.4%);
+  }
+  .env-flap {
+    position: absolute; left: 0; right: 0; top: 0; height: 60%; z-index: 4;
+    background: linear-gradient(180deg, #8d3046, #6d2135);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin: top center;
+    transition: transform .8s var(--ease), z-index 0s linear .4s;
+    border-radius: 6px 6px 0 0;
+  }
+  .seal {
+    position: absolute; left: 50%; top: 60%; z-index: 5;
+    width: 54px; height: 54px; margin: -27px 0 0 -27px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #edd7a8, #c9a263 55%, #a8813f);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .35), inset 0 0 0 3px rgba(255, 255, 255, .18);
+    display: grid; place-items: center; color: #6b2235;
+    transition: opacity .4s, transform .5s var(--ease);
+  }
+  .seal svg { width: 26px; height: 26px; }
+  #intro.open .seal { opacity: 0; transform: scale(.6); }
+  #intro.open .env-flap { transform: rotateX(180deg); z-index: 1; }
+  #intro.open .letter { transform: translateY(-58%); }
+
+  .intro-text { text-align: center; }
+  .intro-text .for { font-family: var(--serif); font-style: italic; font-size: 34px; color: var(--gold-soft); line-height: 1.1; }
+  .intro-text .tap {
+    display: inline-block; margin-top: 10px;
+    font-size: 12px; letter-spacing: .32em; text-transform: uppercase; color: var(--cream-dim);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  #intro.open .intro-text { opacity: 0; transition: opacity .4s; }
+
+  /* ---------- Layout ---------- */
+  main { position: relative; z-index: 1; opacity: 0; transition: opacity 1.2s var(--ease); }
+  main.show { opacity: 1; }
+  section { max-width: 520px; margin: 0 auto; padding: 72px 20px; }
+  .eyebrow {
+    display: block; text-align: center;
+    font-size: 11.5px; letter-spacing: .34em; text-transform: uppercase; color: var(--gold);
+    margin-bottom: 12px;
+  }
+  h2 {
+    font-family: var(--serif); font-weight: 400; text-align: center;
+    font-size: clamp(32px, 9vw, 40px); line-height: 1.1; color: var(--cream);
+  }
+  .divider { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 18px auto 34px; color: var(--gold); }
+  .divider::before, .divider::after { content: ""; width: 56px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); }
+  .divider::after { transform: scaleX(-1); }
+  .divider svg { width: 16px; height: 16px; }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: var(--d, 0s); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- Hero ---------- */
+  .hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding-top: 56px; }
+  .hero .ornament { width: 64px; height: 64px; color: var(--gold); margin-bottom: 18px; }
+  .hero h1 { font-family: var(--serif); font-weight: 400; line-height: 1; }
+  .hero h1 .pre { display: block; font-size: 15px; font-family: var(--sans); letter-spacing: .3em; text-transform: uppercase; color: var(--gold-soft); }
+  .hero h1 .num {
+    display: block; font-size: clamp(120px, 42vw, 170px); font-weight: 500; line-height: .95; margin: 6px 0 0;
+    background: linear-gradient(180deg, #f3e2bd 10%, #c9a263 90%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero h1 .post { display: block; font-style: italic; font-size: clamp(36px, 11vw, 46px); color: var(--cream); margin-top: 2px; }
+  .hero p { max-width: 340px; margin-top: 26px; font-family: var(--serif); font-size: 21px; line-height: 1.45; color: var(--cream-dim); }
+  .hero svg.scroll-hint { margin-top: 44px; width: 22px; height: 34px; color: var(--gold); opacity: .75; animation: hint 2.2s ease-in-out infinite; }
+
+  /* ---------- Tarjetas ---------- */
+  .cards { display: grid; gap: 14px; }
+  .card {
+    position: relative; display: flex; gap: 16px; align-items: flex-start;
+    padding: 20px 18px; border-radius: 16px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .18);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  }
+  .card .ic {
+    flex: 0 0 46px; height: 46px; padding: 10px; border-radius: 50%;
+    color: var(--gold); border: 1px solid var(--line);
+    background: rgba(214, 182, 126, .06);
+  }
+  .card h3 { font-family: var(--serif); font-weight: 500; font-size: 23px; line-height: 1.15; color: var(--gold-soft); }
+  .card .label { font-size: 11px; letter-spacing: .26em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; display: block; }
+  .card p { color: var(--cream-dim); font-size: 15.5px; margin-top: 4px; }
+  .card p.big { font-family: var(--serif); font-size: 26px; color: var(--cream); margin-top: 0; line-height: 1.2; }
+  .card p.quote { font-family: var(--serif); font-style: italic; font-size: 24px; color: var(--cream); margin-top: 0; line-height: 1.2; }
+
+  /* Lo que nos espera */
+  .wait-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .wcard {
+    position: relative; overflow: hidden; cursor: pointer; user-select: none; -webkit-user-select: none;
+    padding: 22px 14px 20px; border-radius: 18px; text-align: center;
+    background: var(--card); border: 1px solid var(--line);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .18);
+    font: inherit; color: inherit;
+  }
+  .wcard:focus-visible { outline: 1px solid var(--gold); outline-offset: 3px; }
+  .wcard .wic { width: 58px; height: 58px; margin: 0 auto 12px; color: var(--gold); }
+  .wcard h3 { font-family: var(--serif); font-weight: 500; font-size: 24px; color: var(--gold-soft); line-height: 1.1; }
+  .wcard p { font-size: 14px; color: var(--cream-dim); margin-top: 6px; line-height: 1.45; }
+  .wcard::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0;
+    background: linear-gradient(115deg, transparent 30%, rgba(232, 211, 168, .28) 50%, transparent 70%);
+    transform: translateX(-100%);
+  }
+  .wcard.fx-glow::after { animation: sheen .9s var(--ease); }
+  .wcard.fx-glow { animation: glow .9s var(--ease); }
+  .wcard.fx-beat .wic { animation: beat .8s var(--ease); }
+  .wcard.fx-spin .wic { animation: spin .9s var(--ease); }
+
+  /* animaciones sutiles de íconos */
+  .steam { animation: steam 2.8s ease-in-out infinite; }
+  .steam:nth-of-type(2) { animation-delay: .5s; }
+  .steam:nth-of-type(3) { animation-delay: 1s; }
+  .note-a { animation: bob 2.6s ease-in-out infinite; transform-origin: center; }
+  .gift-lid { animation: lid 3.2s ease-in-out infinite; transform-origin: 12px 10px; transform-box: view-box; }
+  .love-heart { animation: softbeat 2.2s ease-in-out infinite; transform-origin: 12px 13px; transform-box: view-box; }
+
+  /* ---------- Cuenta regresiva ---------- */
+  .countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .cd-box {
+    padding: 16px 4px 12px; border-radius: 14px; text-align: center;
+    background: var(--card); border: 1px solid var(--line);
+  }
+  .cd-num { font-family: var(--serif); font-size: clamp(34px, 10vw, 44px); line-height: 1; color: var(--gold-soft); font-variant-numeric: tabular-nums; }
+  .cd-lbl { font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--cream-dim); margin-top: 6px; }
+  .cd-note { text-align: center; margin-top: 18px; font-family: var(--serif); font-style: italic; font-size: 19px; color: var(--cream-dim); }
+  .cd-done { display: none; text-align: center; font-family: var(--serif); font-size: 30px; color: var(--gold-soft); }
+
+  /* ---------- Mapa ---------- */
+  .map-wrap {
+    position: relative; width: 100%; aspect-ratio: 340 / 460;
+    border-radius: 20px; overflow: hidden;
+    background: radial-gradient(120% 90% at 30% 20%, #4a1828, #2c0e17 75%);
+    border: 1px solid var(--line);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, .3);
+  }
+  .map-wrap svg.map { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .road { fill: none; stroke: #5a2334; stroke-width: 18; stroke-linecap: round; stroke-linejoin: round; }
+  .road-edge { fill: none; stroke: rgba(214, 182, 126, .14); stroke-width: 20; stroke-linecap: round; stroke-linejoin: round; }
+  .road-mid { fill: none; stroke: rgba(246, 236, 220, .16); stroke-width: 1; stroke-dasharray: 5 7; }
+  .block { fill: rgba(246, 236, 220, .035); stroke: rgba(214, 182, 126, .12); stroke-width: 1; }
+  .tree { fill: none; stroke: rgba(214, 182, 126, .25); stroke-width: 1; }
+  #route-glow { fill: none; stroke: rgba(214, 182, 126, .35); stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; filter: blur(3px); }
+  #route { fill: none; stroke: var(--gold); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .stop-dot { fill: var(--wine-800); stroke: var(--gold); stroke-width: 1.6; opacity: 0; transform-box: fill-box; transform-origin: center; transition: opacity .4s, transform .5s var(--ease); transform: scale(.3); }
+  .stop-dot.on { opacity: 1; transform: scale(1); }
+  #house { opacity: 0; transform-box: fill-box; transform-origin: center bottom; transition: opacity .6s, transform .8s var(--ease); transform: scale(.6); }
+  #house.on { opacity: 1; transform: scale(1); }
+  #house.on .house-heart { animation: softbeat 1.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  #marker { opacity: 0; transition: opacity .3s; }
+  #marker.on { opacity: 1; }
+  .marker-halo { fill: rgba(214, 182, 126, .25); animation: halo 1.6s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+
+  .stop-label {
+    position: absolute; max-width: 44%;
+    padding: 5px 9px; border-radius: 8px;
+    background: rgba(31, 9, 16, .82); border: 1px solid var(--line);
+    font-size: 11.5px; line-height: 1.3; color: var(--cream);
+    opacity: 0; transition: opacity .5s var(--ease), translate .5s var(--ease);
+    translate: 0 6px;
+    pointer-events: none;
+  }
+  .stop-label b { color: var(--gold); font-weight: 500; margin-right: 3px; }
+  .stop-label.on { opacity: 1; translate: 0 0; }
+  .map-wrap svg.compass { position: absolute; right: 14px; bottom: 12px; width: 30px; height: 40px; color: rgba(214, 182, 126, .6); }
+
+  .address {
+    margin-top: 22px; padding: 18px; border-radius: 14px;
+    border: 1px solid var(--line); background: var(--card);
+    font-family: var(--serif); font-size: 19px; line-height: 1.45; color: var(--cream);
+  }
+  .tip { display: flex; gap: 12px; align-items: flex-start; margin-top: 14px; padding: 0 4px; color: var(--cream-dim); font-size: 15px; }
+  .tip .ic { flex: 0 0 22px; height: 22px; color: var(--gold); margin-top: 1px; }
+
+  /* ---------- Botones ---------- */
+  .btns { display: grid; gap: 10px; margin-top: 22px; }
+  .btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 52px; padding: 14px 18px; border-radius: 999px;
+    font-family: var(--sans); font-size: 15px; font-weight: 400; letter-spacing: .04em;
+    text-decoration: none; cursor: pointer;
+    color: var(--cream); background: transparent; border: 1px solid rgba(214, 182, 126, .5);
+    transition: background .3s, transform .2s, border-color .3s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn:hover { background: rgba(214, 182, 126, .08); border-color: var(--gold); }
+  .btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+  .btn .ic { width: 20px; height: 20px; color: var(--gold); flex: 0 0 20px; }
+  .btn.solid {
+    background: linear-gradient(135deg, #e3c68f, #c49a57); color: var(--wine-800); border: 0; font-weight: 500;
+    box-shadow: 0 10px 26px rgba(196, 154, 87, .28);
+  }
+  .btn.solid .ic { color: var(--wine-800); }
+  .btn.solid:hover { background: linear-gradient(135deg, #ecd29e, #cfa561); }
+  .btn.ghost-sm { min-height: 44px; font-size: 14px; margin: 16px auto 0; width: fit-content; padding: 10px 20px; }
+
+  /* ---------- Cierre ---------- */
+  .closing { text-align: center; padding-bottom: 110px; }
+  .closing .ornament { width: 54px; height: 54px; color: var(--gold); margin: 0 auto 20px; }
+  .closing p.msg { font-family: var(--serif); font-size: 23px; line-height: 1.5; color: var(--cream); max-width: 360px; margin: 0 auto; }
+  .closing .sign { font-family: var(--serif); font-style: italic; font-size: 20px; color: var(--gold-soft); margin-top: 18px; }
+  .closing .btn { margin: 34px auto 0; max-width: 300px; width: 100%; }
+  .answer { margin-top: 28px; font-family: var(--serif); font-style: italic; font-size: 38px; color: var(--gold-soft); opacity: 0; transform: scale(.9); transition: opacity .9s var(--ease), transform .9s var(--ease); min-height: 1.3em; }
+  .answer.on { opacity: 1; transform: none; }
+  .btn.done { pointer-events: none; opacity: .55; }
+
+  footer { text-align: center; font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: rgba(246, 236, 220, .35); padding: 0 20px 40px; position: relative; z-index: 1; }
+
+  /* ---------- Keyframes ---------- */
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @keyframes pulse { 0%, 100% { opacity: .5; } 50% { opacity: 1; } }
+  @keyframes hint { 0%, 100% { transform: translateY(0); opacity: .4; } 50% { transform: translateY(8px); opacity: .9; } }
+  @keyframes steam { 0% { opacity: 0; transform: translateY(2px); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(-3px); } }
+  @keyframes bob { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-1.5px) rotate(-3deg); } }
+  @keyframes lid { 0%, 70%, 100% { transform: translateY(0) rotate(0); } 78% { transform: translateY(-1.5px) rotate(-4deg); } 86% { transform: translateY(-1px) rotate(3deg); } }
+  @keyframes softbeat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.08); } 30% { transform: scale(1); } 45% { transform: scale(1.06); } 60% { transform: scale(1); } }
+  @keyframes beat { 0% { transform: scale(1); } 20% { transform: scale(1.25); } 40% { transform: scale(.95); } 60% { transform: scale(1.18); } 100% { transform: scale(1); } }
+  @keyframes spin { from { transform: rotateY(0); } to { transform: rotateY(360deg); } }
+  @keyframes sheen { 0% { opacity: 1; transform: translateX(-100%); } 100% { opacity: 1; transform: translateX(100%); } }
+  @keyframes glow { 0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, .18); border-color: var(--line); } 40% { box-shadow: 0 0 34px rgba(214, 182, 126, .38); border-color: var(--gold); } }
+  @keyframes halo { 0% { transform: scale(.6); opacity: .9; } 100% { transform: scale(1.8); opacity: 0; } }
+
+  @media (min-width: 560px) {
+    section { padding: 90px 24px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; transition-delay: 0s !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body class="locked">
+
+<canvas id="particles" aria-hidden="true"></canvas>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<!-- Íconos reutilizables -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.7c0 5.4-7.5 10-7.5 10z"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6.1-6.5-11.2a6.5 6.5 0 0 1 13 0C18.5 14.9 12 21 12 21z"/><circle cx="12" cy="9.8" r="2.3"/></symbol>
+    <symbol id="i-nav" viewBox="0 0 24 24"><path d="M20 4 4 11l7 2 2 7z"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11 12 4.5 20 11M6 9.5V20h12V9.5"/><path d="M12 17.2s-2.6-1.6-2.6-3.3a1.3 1.3 0 0 1 2.6-.5 1.3 1.3 0 0 1 2.6.5c0 1.7-2.6 3.3-2.6 3.3z"/></symbol>
+    <symbol id="i-replay" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3M4.5 4.5v3.8h3.8"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3.5c.6 4.2 2.3 5.9 6.5 6.5-4.2.6-5.9 2.3-6.5 6.5-.6-4.2-2.3-5.9-6.5-6.5 4.2-.6 5.9-2.3 6.5-6.5z"/><path d="M18.5 16v4M16.5 18h4"/></symbol>
+  </defs>
+</svg>
+
+<!-- 1. Sobre -->
+<div id="intro">
+  <button class="env-btn" id="openBtn" aria-label="Para Ekaterina, toca para abrir">
+    <div class="envelope" aria-hidden="true">
+      <div class="env-back"></div>
+      <div class="letter">
+        <span class="l-num">33</span>
+        <span class="l-line"></span>
+        <span class="l-sub">Ekaterina Shion</span>
+      </div>
+      <div class="env-pocket"></div>
+      <div class="env-flap"></div>
+      <div class="seal"><svg class="ico" viewBox="0 0 24 24" style="stroke-width:1.5"><use href="#i-heart"/></svg></div>
+    </div>
+    <div class="intro-text">
+      <div class="for">Para Ekaterina,</div>
+      <span class="tap">toca para abrir</span>
+    </div>
+  </button>
+</div>
+
+<main id="main" aria-hidden="true">
+
+  <!-- 2. Mensaje principal -->
+  <section class="hero">
+    <svg class="ornament ico reveal" viewBox="0 0 64 64" aria-hidden="true" style="stroke-width:1">
+      <circle cx="32" cy="32" r="30" opacity=".35"/>
+      <circle cx="32" cy="32" r="24" opacity=".2"/>
+      <path d="M32 44s-11-6.7-11-14.6A6.3 6.3 0 0 1 32 25.4a6.3 6.3 0 0 1 11 4c0 7.9-11 14.6-11 14.6z"/>
+      <path d="M32 2v6M32 56v6M2 32h6M56 32h6" opacity=".5"/>
+    </svg>
+    <h1 class="reveal" style="--d:.15s">
+      <span class="pre">Cumpleaños número</span>
+      <span class="num">33</span>
+      <span class="post">de mi amor</span>
+    </h1>
+    <p class="reveal" style="--d:.35s">Este día es para celebrar tu existencia, hacerte sentir bien, disfrutarnos y amarnos por dos noches.</p>
+    <svg class="scroll-hint ico reveal" style="--d:.6s" viewBox="0 0 22 34" aria-hidden="true"><rect x="1" y="1" width="20" height="32" rx="10"/><path d="M11 8v6"/></svg>
+  </section>
+
+  <!-- 3. Detalles -->
+  <section id="detalles">
+    <span class="eyebrow reveal">Guarda la fecha</span>
+    <h2 class="reveal">Los detalles</h2>
+    <div class="divider reveal" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><use href="#i-heart"/></svg></div>
+
+    <div class="cards">
+      <article class="card reveal">
+        <div class="ic"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/><path d="M12 17.6s-2.4-1.4-2.4-3a1.2 1.2 0 0 1 2.4-.4 1.2 1.2 0 0 1 2.4.4c0 1.6-2.4 3-2.4 3z"/></svg></div>
+        <div>
+          <span class="label">Fecha</span>
+          <p class="big">2 de octubre</p>
+        </div>
+      </article>
+
+      <article class="card reveal">
+        <div class="ic"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></div>
+        <div>
+          <span class="label">Hora</span>
+          <p class="big">5:00 PM</p>
+          <p>Apenas salgas del trabajo a las 5:00 PM, venga directo al Airbnb.</p>
+        </div>
+      </article>
+
+      <article class="card reveal">
+        <div class="ic"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-spark"/></svg></div>
+        <div>
+          <span class="label">Qué traer</span>
+          <p class="quote">"Solo tu presencia".</p>
+          <p>Yo me encargo del resto.</p>
+        </div>
+      </article>
+
+      <article class="card reveal">
+        <div class="ic"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.2V7.6c0-1.3 1.9-1.6 1.9-2.9A1.9 1.9 0 0 0 12 2.8a1.9 1.9 0 0 0-1.9 1.9"/><path d="M12 8.2 3.2 15.1c-.6.5-.3 1.6.5 1.6h16.6c.8 0 1.1-1.1.5-1.6z"/><path d="M8 16.7l1 4.3h6l1-4.3" opacity=".7"/></svg></div>
+        <div>
+          <span class="label">Un detalle extra</span>
+          <p>Como al día siguiente tenemos una cena de cumpleaños, traiga un outfit para esa noche.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 4. Lo que nos espera -->
+  <section id="espera">
+    <span class="eyebrow reveal">Dos noches</span>
+    <h2 class="reveal">Lo que nos espera</h2>
+    <div class="divider reveal" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><use href="#i-spark"/></svg></div>
+
+    <div class="wait-grid">
+      <button class="wcard reveal" data-fx="fx-glow" type="button">
+        <div class="wic"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="stroke-width:1.1">
+          <path d="M3.5 12.5h17a8.5 8.5 0 0 1-17 0z"/><path d="M9 21h6"/>
+          <path class="steam" d="M9 10c-1-1.2 1-1.8 0-3.2"/>
+          <path class="steam" d="M12 10c-1-1.2 1-1.8 0-3.2"/>
+          <path class="steam" d="M15 10c-1-1.2 1-1.8 0-3.2"/>
+        </svg></div>
+        <h3>Comida</h3>
+        <p>Algo rico preparado para las dos</p>
+      </button>
+
+      <button class="wcard reveal" data-fx="fx-spin" type="button">
+        <div class="wic"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="stroke-width:1.1">
+          <g class="note-a"><path d="M9 18V6.5l10-2.2V16"/><path d="M9 10l10-2.2"/><circle cx="6.6" cy="18" r="2.4"/><circle cx="16.6" cy="16" r="2.4"/></g>
+        </svg></div>
+        <h3>Música</h3>
+        <p>Una playlist nuestra sonando toda la noche</p>
+      </button>
+
+      <button class="wcard reveal" data-fx="fx-beat" type="button">
+        <div class="wic"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="stroke-width:1.1">
+          <rect x="4.5" y="11" width="15" height="9.5" rx="1"/><path d="M12 11v9.5"/>
+          <g class="gift-lid"><rect x="3.5" y="7.8" width="17" height="3.2" rx=".8"/><path d="M12 7.8c-1.4-2.9-4.8-3.3-4.8-1.2 0 1.2 2.4 1.2 4.8 1.2zM12 7.8c1.4-2.9 4.8-3.3 4.8-1.2 0 1.2-2.4 1.2-4.8 1.2z"/></g>
+        </svg></div>
+        <h3>Regalos</h3>
+        <p>Sorpresas pensadas solo para usted</p>
+      </button>
+
+      <button class="wcard reveal" data-fx="fx-beat" type="button">
+        <div class="wic"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="stroke-width:1.1">
+          <g class="love-heart"><path d="M12 20.5s-8-4.9-8-10.6A4.6 4.6 0 0 1 12 7a4.6 4.6 0 0 1 8 2.9c0 5.7-8 10.6-8 10.6z"/></g>
+          <path d="M9 11.2a2 2 0 0 1 1.6-1.4" opacity=".6"/>
+        </svg></div>
+        <h3>Amor</h3>
+        <p>Dos noches para amarnos sin prisa</p>
+      </button>
+    </div>
+  </section>
+
+  <!-- 5. Cuenta regresiva -->
+  <section id="cuenta">
+    <span class="eyebrow reveal">Ya casi</span>
+    <h2 class="reveal">Falta muy poco</h2>
+    <div class="divider reveal" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></div>
+
+    <div class="countdown reveal" id="countdown" role="timer" aria-live="off">
+      <div class="cd-box"><div class="cd-num" id="cd-d">00</div><div class="cd-lbl">Días</div></div>
+      <div class="cd-box"><div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Horas</div></div>
+      <div class="cd-box"><div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Min</div></div>
+      <div class="cd-box"><div class="cd-num" id="cd-s">00</div><div class="cd-lbl">Seg</div></div>
+    </div>
+    <div class="cd-done" id="cd-done">Ya es hoy, mi amor</div>
+    <p class="cd-note reveal">2 de octubre, 5:00 PM · hora de Nicaragua</p>
+  </section>
+
+  <!-- 6. Cómo llegar -->
+  <section id="llegar">
+    <span class="eyebrow reveal">El camino hacia mí</span>
+    <h2 class="reveal">Cómo llegar</h2>
+    <div class="divider reveal" aria-hidden="true"><svg class="ico" viewBox="0 0 24 24"><use href="#i-pin"/></svg></div>
+
+    <div class="map-wrap reveal" id="map" role="img" aria-label="Mapa ilustrado del trayecto: Carretera a Masaya kilómetro 12.3, calle Los Vanegas 500 metros al este, entrada a La Gaviota, 80 metros al sur, primera casa a mano izquierda.">
+      <svg class="map" viewBox="0 0 340 460" aria-hidden="true">
+        <!-- manzanas y árboles -->
+        <rect class="block" x="72" y="180" width="130" height="90" rx="10"/>
+        <rect class="block" x="72" y="290" width="130" height="140" rx="10"/>
+        <rect class="block" x="72" y="20" width="110" height="100" rx="10"/>
+        <rect class="block" x="196" y="20" width="126" height="100" rx="10"/>
+        <rect class="block" x="258" y="180" width="64" height="70" rx="10"/>
+        <rect class="block" x="258" y="330" width="64" height="100" rx="10"/>
+        <rect class="block" x="214" y="330" width="30" height="100" rx="8"/>
+        <g class="tree">
+          <circle cx="100" cy="60" r="7"/><circle cx="118" cy="72" r="5"/><circle cx="236" cy="52" r="6"/>
+          <circle cx="290" cy="80" r="8"/><circle cx="110" cy="340" r="7"/><circle cx="160" cy="380" r="9"/>
+          <circle cx="130" cy="400" r="5"/><circle cx="20" cy="90" r="5"/><circle cx="20" cy="280" r="6"/>
+          <circle cx="170" cy="215" r="6"/>
+        </g>
+        <!-- calles -->
+        <path class="road-edge" d="M46 470 L46 -10"/>
+        <path class="road-edge" d="M46 150 L350 150"/>
+        <path class="road-edge" d="M230 150 L230 312"/>
+        <path class="road" d="M46 470 L46 -10"/>
+        <path class="road" d="M46 150 L350 150"/>
+        <path class="road" d="M230 150 L230 312"/>
+        <path class="road-mid" d="M46 470 L46 -10"/>
+        <path class="road-mid" d="M60 150 L350 150"/>
+        <path class="road-mid" d="M230 162 L230 312"/>
+
+        <!-- ruta -->
+        <path id="route-glow" d="M46 440 L46 170 Q46 150 66 150 L210 150 Q230 150 230 170 L230 282"/>
+        <path id="route" d="M46 440 L46 170 Q46 150 66 150 L210 150 Q230 150 230 170 L230 282"/>
+
+        <!-- paradas -->
+        <circle class="stop-dot" data-stop="0" cx="46" cy="162" r="5"/>
+        <circle class="stop-dot" data-stop="1" cx="138" cy="150" r="5"/>
+        <circle class="stop-dot" data-stop="2" cx="226" cy="158" r="5"/>
+        <circle class="stop-dot" data-stop="3" cx="230" cy="218" r="5"/>
+        <circle class="stop-dot" data-stop="4" cx="230" cy="282" r="5"/>
+
+        <!-- casa -->
+        <g id="house" stroke="#d6b67e" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M252 290 L274 272 L296 290" />
+          <path d="M256 287 V310 H292 V287" fill="rgba(42,13,21,.9)"/>
+          <path class="house-heart" d="M274 305s-7-4.2-7-8.8a3.6 3.6 0 0 1 7-1.4 3.6 3.6 0 0 1 7 1.4c0 4.6-7 8.8-7 8.8z" fill="rgba(214,182,126,.25)"/>
+        </g>
+
+        <!-- marcador -->
+        <g id="marker">
+          <circle class="marker-halo" cx="0" cy="0" r="12"/>
+          <circle cx="0" cy="0" r="11" fill="#2a0d15" stroke="#d6b67e" stroke-width="1.4"/>
+          <path d="M0 5.5s-5.5-3.3-5.5-7.1A2.9 2.9 0 0 1 0 -3.1a2.9 2.9 0 0 1 5.5 1.5c0 3.8-5.5 7.1-5.5 7.1z" fill="#d6b67e"/>
+        </g>
+      </svg>
+
+      <div class="stop-label" data-stop="0" style="left:18.5%; top:44%;"><b>a</b>Carretera a Masaya, Km 12.3</div>
+      <div class="stop-label" data-stop="1" style="left:40.6%; top:21%; transform:translateX(-50%); white-space:nowrap; max-width:none;"><b>b</b>Calle Los Vanegas, 500 m al este</div>
+      <div class="stop-label" data-stop="2" style="left:67.6%; top:9%; transform:translateX(-50%); white-space:nowrap; max-width:none;"><b>c</b>Entrada a La Gaviota</div>
+      <div class="stop-label" data-stop="3" style="left:69.5%; top:44%; white-space:nowrap; max-width:none;"><b>d</b>80 m al sur</div>
+      <div class="stop-label" data-stop="4" style="left:26%; top:70%; max-width:56%;"><b>e</b>Primera casa a mano izquierda (una planta)</div>
+
+      <svg class="compass ico" viewBox="0 0 30 40" aria-hidden="true" style="stroke-width:1"><path d="M15 14 L19 30 L15 27 L11 30 Z"/><text x="15" y="10" text-anchor="middle" font-family="Jost, sans-serif" font-size="9" fill="currentColor" stroke="none">N</text></svg>
+    </div>
+
+    <button class="btn ghost-sm reveal" id="replay" type="button">
+      <svg class="ico ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-replay"/></svg>
+      Reproducir trayecto otra vez
+    </button>
+
+    <p class="address reveal">Km 12.3 carretera a Masaya, calle Los Vanegas 500 mts al este, entrada a la Gaviota, 80 m al sur, primera casa a mano izquierda, una planta.</p>
+
+    <div class="tip reveal">
+      <svg class="ico ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-nav"/></svg>
+      <span>También puedes poner 'La Gaviota, Managua' en Waze y te trae directo.</span>
+    </div>
+
+    <div class="btns">
+      <a class="btn solid reveal" href="https://maps.app.goo.gl/B5dXdUyAdxdKX1xa9?g_st=ic" target="_blank" rel="noopener">
+        <svg class="ico ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pin"/></svg>
+        Abrir en Google Maps
+      </a>
+      <a class="btn reveal" href="https://waze.com/ul?q=La%20Gaviota%2C%20Managua&amp;navigate=yes" target="_blank" rel="noopener">
+        <svg class="ico ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-nav"/></svg>
+        Abrir en Waze
+      </a>
+      <a class="btn reveal" href="https://www.airbnb.es/rooms/1144133376550418552" target="_blank" rel="noopener">
+        <svg class="ico ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-home"/></svg>
+        Ver el Airbnb
+      </a>
+    </div>
+  </section>
+
+  <!-- 7. Cierre -->
+  <section class="closing" id="cierre">
+    <svg class="ornament ico reveal" viewBox="0 0 24 24" aria-hidden="true" style="stroke-width:.9"><use href="#i-heart"/></svg>
+    <p class="msg reveal">Gracias por existir y por hacer mi vida más bonita. Estas dos noches son tuyas, igual que mi corazón.</p>
+    <p class="sign reveal">Te amo, Ekaterina.</p>
+    <button class="btn solid reveal" id="confirm" type="button">
+      <svg class="ico ic" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-heart"/></svg>
+      Confirmo que voy
+    </button>
+    <div class="answer" id="answer" aria-live="polite"></div>
+  </section>
+
+  <footer>Ekaterina Shion · 33</footer>
+</main>
+
+<script>
+(function () {
+  "use strict";
+  var RM = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- Partículas de fondo: pétalos y luces cálidas ---------- */
+  var pc = document.getElementById("particles");
+  var px = pc.getContext("2d");
+  var W = 0, H = 0, DPR = Math.min(window.devicePixelRatio || 1, 2);
+  var petals = [], lights = [];
+
+  function resize() {
+    W = window.innerWidth; H = window.innerHeight;
+    [pc, cc].forEach(function (c) {
+      c.width = W * DPR; c.height = H * DPR;
+    });
+    px.setTransform(DPR, 0, 0, DPR, 0, 0);
+    cx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    if (RM) drawStatic();
+  }
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function makePetal(top) {
+    return {
+      x: rnd(0, W), y: top ? rnd(-H, 0) - 20 : rnd(0, H),
+      s: rnd(5, 10), vy: rnd(.25, .7), vx: rnd(-.2, .25),
+      a: rnd(0, Math.PI * 2), va: rnd(-.015, .015),
+      sw: rnd(0, Math.PI * 2), swv: rnd(.008, .02),
+      c: Math.random() < .6 ? "201,129,140" : "232,211,168",
+      o: rnd(.25, .55)
+    };
+  }
+  function makeLight() {
+    return { x: rnd(0, W), y: rnd(0, H), r: rnd(1, 2.6), t: rnd(0, Math.PI * 2), vt: rnd(.008, .02), vy: rnd(-.15, -.04) };
+  }
+  function initParticles() {
+    var n = W < 500 ? 16 : 26;
+    petals = []; lights = [];
+    for (var i = 0; i < n; i++) petals.push(makePetal(false));
+    for (var j = 0; j < (W < 500 ? 28 : 44); j++) lights.push(makeLight());
+  }
+  function drawPetal(p) {
+    px.save();
+    px.translate(p.x, p.y); px.rotate(p.a);
+    px.fillStyle = "rgba(" + p.c + "," + p.o + ")";
+    px.beginPath();
+    px.moveTo(0, -p.s);
+    px.bezierCurveTo(p.s * .9, -p.s * .6, p.s * .7, p.s * .7, 0, p.s);
+    px.bezierCurveTo(-p.s * .7, p.s * .7, -p.s * .9, -p.s * .6, 0, -p.s);
+    px.fill();
+    px.restore();
+  }
+  function drawLight(l) {
+    var o = .25 + .35 * (Math.sin(l.t) * .5 + .5);
+    var g = px.createRadialGradient(l.x, l.y, 0, l.x, l.y, l.r * 6);
+    g.addColorStop(0, "rgba(240,210,150," + o + ")");
+    g.addColorStop(1, "rgba(240,210,150,0)");
+    px.fillStyle = g;
+    px.beginPath(); px.arc(l.x, l.y, l.r * 6, 0, Math.PI * 2); px.fill();
+  }
+  function drawStatic() {
+    px.clearRect(0, 0, W, H);
+    lights.forEach(drawLight);
+  }
+  var running = true;
+  function tick() {
+    if (!running) return;
+    px.clearRect(0, 0, W, H);
+    for (var i = 0; i < lights.length; i++) {
+      var l = lights[i];
+      l.t += l.vt; l.y += l.vy;
+      if (l.y < -10) { l.y = H + 10; l.x = rnd(0, W); }
+      drawLight(l);
+    }
+    for (var k = 0; k < petals.length; k++) {
+      var p = petals[k];
+      p.sw += p.swv; p.a += p.va;
+      p.x += p.vx + Math.sin(p.sw) * .35; p.y += p.vy;
+      if (p.y > H + 20 || p.x < -30 || p.x > W + 30) { petals[k] = makePetal(true); petals[k].y = -20; }
+      drawPetal(p);
+    }
+    requestAnimationFrame(tick);
+  }
+  document.addEventListener("visibilitychange", function () {
+    if (RM) return;
+    running = !document.hidden;
+    if (running) requestAnimationFrame(tick);
+  });
+
+  /* ---------- Confeti ---------- */
+  var cc = document.getElementById("confetti");
+  var cx = cc.getContext("2d");
+  var bits = [], confettiOn = false;
+  var colors = ["#d6b67e", "#e8d3a8", "#f6ecdc", "#c9818c", "#7a2639", "#b88a4a"];
+  function burst() {
+    var shapes = ["heart", "circle", "rect", "ribbon", "star"];
+    for (var i = 0; i < 150; i++) {
+      var ang = rnd(-Math.PI * .9, -Math.PI * .1);
+      var sp = rnd(6, 13);
+      bits.push({
+        x: W / 2 + rnd(-40, 40), y: H * .72,
+        vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp,
+        r: rnd(0, 6.28), vr: rnd(-.2, .2), s: rnd(5, 10),
+        c: colors[(Math.random() * colors.length) | 0],
+        sh: shapes[(Math.random() * shapes.length) | 0],
+        life: 0, flip: rnd(0, 6.28)
+      });
+    }
+    if (!confettiOn) { confettiOn = true; requestAnimationFrame(confettiTick); }
+  }
+  function shape(b) {
+    var s = b.s;
+    cx.beginPath();
+    switch (b.sh) {
+      case "heart":
+        cx.moveTo(0, s * .35);
+        cx.bezierCurveTo(-s * 1.1, -s * .35, -s * .5, -s * 1.1, 0, -s * .45);
+        cx.bezierCurveTo(s * .5, -s * 1.1, s * 1.1, -s * .35, 0, s * .35);
+        cx.fill(); break;
+      case "circle":
+        cx.arc(0, 0, s * .45, 0, 6.283); cx.fill(); break;
+      case "rect":
+        cx.fillRect(-s * .5, -s * .25, s, s * .5); break;
+      case "ribbon":
+        cx.lineWidth = 1.6; cx.strokeStyle = b.c;
+        cx.moveTo(-s, 0); cx.quadraticCurveTo(-s * .5, -s * .6, 0, 0); cx.quadraticCurveTo(s * .5, s * .6, s, 0);
+        cx.stroke(); break;
+      case "star":
+        for (var i = 0; i < 8; i++) {
+          var rr = i % 2 ? s * .22 : s * .6, a = i * Math.PI / 4;
+          cx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr);
+        }
+        cx.closePath(); cx.fill(); break;
+    }
+  }
+  function confettiTick() {
+    cx.clearRect(0, 0, W, H);
+    for (var i = bits.length - 1; i >= 0; i--) {
+      var b = bits[i];
+      b.life++;
+      b.vy += .22; b.vx *= .985; b.vy *= .985;
+      b.x += b.vx; b.y += b.vy; b.r += b.vr; b.flip += .12;
+      var alpha = b.life > 140 ? Math.max(0, 1 - (b.life - 140) / 50) : 1;
+      if (b.y > H + 30 || alpha <= 0) { bits.splice(i, 1); continue; }
+      cx.save();
+      cx.globalAlpha = alpha;
+      cx.translate(b.x, b.y); cx.rotate(b.r); cx.scale(1, Math.abs(Math.cos(b.flip)) * .7 + .3);
+      cx.fillStyle = b.c;
+      shape(b);
+      cx.restore();
+    }
+    if (bits.length) requestAnimationFrame(confettiTick);
+    else { confettiOn = false; cx.clearRect(0, 0, W, H); }
+  }
+
+  resize();
+  initParticles();
+  if (RM) drawStatic(); else requestAnimationFrame(tick);
+  var rt;
+  window.addEventListener("resize", function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () { resize(); initParticles(); if (RM) drawStatic(); }, 150);
+  });
+
+  /* ---------- Sobre ---------- */
+  var intro = document.getElementById("intro");
+  var main = document.getElementById("main");
+  var opened = false;
+  document.getElementById("openBtn").addEventListener("click", function () {
+    if (opened) return;
+    opened = true;
+    intro.classList.add("open");
+    var wait = RM ? 50 : 1900;
+    setTimeout(function () {
+      intro.classList.add("gone");
+      document.body.classList.remove("locked");
+      main.classList.add("show");
+      main.removeAttribute("aria-hidden");
+      window.scrollTo(0, 0);
+      startReveals();
+    }, wait);
+    setTimeout(function () { intro.style.display = "none"; }, wait + 1000);
+  });
+
+  /* ---------- Revelado al hacer scroll ---------- */
+  function startReveals() {
+    var els = document.querySelectorAll(".reveal");
+    // escalonado dentro de cada grupo de tarjetas
+    document.querySelectorAll(".cards, .wait-grid, .btns").forEach(function (g) {
+      Array.prototype.forEach.call(g.children, function (c, i) { c.style.setProperty("--d", (i * .16) + "s"); });
+    });
+    if (RM || !("IntersectionObserver" in window)) {
+      els.forEach(function (e) { e.classList.add("in"); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+      });
+    }, { threshold: .15, rootMargin: "0px 0px -8% 0px" });
+    els.forEach(function (e) { io.observe(e); });
+    observeMap();
+  }
+
+  /* ---------- Efecto al tocar tarjetas ---------- */
+  document.querySelectorAll(".wcard").forEach(function (card) {
+    card.addEventListener("click", function () {
+      var fx = card.getAttribute("data-fx");
+      card.classList.remove(fx);
+      void card.offsetWidth;
+      card.classList.add(fx);
+      setTimeout(function () { card.classList.remove(fx); }, 950);
+    });
+  });
+
+  /* ---------- Cuenta regresiva (2 oct, 5:00 PM Nicaragua = UTC-6) ---------- */
+  var target = Date.UTC(2026, 9, 2, 23, 0, 0);
+  var cdD = document.getElementById("cd-d"), cdH = document.getElementById("cd-h"),
+      cdM = document.getElementById("cd-m"), cdS = document.getElementById("cd-s");
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function updateCountdown() {
+    var diff = target - Date.now();
+    if (diff <= 0) {
+      document.getElementById("countdown").style.display = "none";
+      document.getElementById("cd-done").style.display = "block";
+      clearInterval(cdTimer);
+      return;
+    }
+    var s = Math.floor(diff / 1000);
+    cdD.textContent = pad(Math.floor(s / 86400));
+    cdH.textContent = pad(Math.floor(s % 86400 / 3600));
+    cdM.textContent = pad(Math.floor(s % 3600 / 60));
+    cdS.textContent = pad(s % 60);
+  }
+  var cdTimer = setInterval(updateCountdown, 1000);
+  updateCountdown();
+
+  /* ---------- Trayecto animado ---------- */
+  var route = document.getElementById("route");
+  var glow = document.getElementById("route-glow");
+  var marker = document.getElementById("marker");
+  var house = document.getElementById("house");
+  var dots = document.querySelectorAll(".stop-dot");
+  var labels = document.querySelectorAll(".stop-label");
+  var L = route.getTotalLength();
+  var stopLens = [];
+
+  // longitud de la ruta donde queda cada parada (punto más cercano)
+  dots.forEach(function (d) {
+    var sx = +d.getAttribute("cx"), sy = +d.getAttribute("cy"), best = 0, bd = 1e9;
+    for (var l = 0; l <= L; l += 1) {
+      var p = route.getPointAtLength(l), dd = (p.x - sx) * (p.x - sx) + (p.y - sy) * (p.y - sy);
+      if (dd < bd) { bd = dd; best = l; }
+    }
+    stopLens.push(best);
+  });
+
+  [route, glow].forEach(function (p) { p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
+
+  var animId = null;
+  function setStops(len) {
+    stopLens.forEach(function (sl, i) {
+      var on = len >= sl - 1;
+      dots[i].classList.toggle("on", on);
+      labels[i].classList.toggle("on", on);
+    });
+    house.classList.toggle("on", len >= L - 1);
+  }
+  function placeMarker(len) {
+    var p = route.getPointAtLength(len);
+    marker.setAttribute("transform", "translate(" + p.x + " " + p.y + ")");
+  }
+  function ease(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+
+  function playRoute() {
+    if (animId) cancelAnimationFrame(animId);
+    if (RM) {
+      [route, glow].forEach(function (p) { p.style.strokeDashoffset = 0; });
+      placeMarker(L); marker.classList.add("on"); setStops(L);
+      return;
+    }
+    setStops(-1);
+    marker.classList.add("on");
+    var dur = 7000, t0 = null;
+    function step(ts) {
+      if (!t0) t0 = ts;
+      var t = Math.min(1, (ts - t0) / dur);
+      var len = L * ease(t);
+      route.style.strokeDashoffset = L - len;
+      glow.style.strokeDashoffset = L - len;
+      placeMarker(len);
+      setStops(len);
+      if (t < 1) animId = requestAnimationFrame(step);
+      else animId = null;
+    }
+    placeMarker(0);
+    animId = requestAnimationFrame(step);
+  }
+
+  var mapPlayed = false;
+  function observeMap() {
+    var mapEl = document.getElementById("map");
+    var mo = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting && !mapPlayed) {
+        mapPlayed = true;
+        setTimeout(playRoute, 500);
+        mo.disconnect();
+      }
+    }, { threshold: .45 });
+    mo.observe(mapEl);
+  }
+  if (RM) playRoute();
+  document.getElementById("replay").addEventListener("click", function () { mapPlayed = true; playRoute(); });
+
+  /* ---------- Confirmación ---------- */
+  var confirmBtn = document.getElementById("confirm");
+  confirmBtn.addEventListener("click", function () {
+    var ans = document.getElementById("answer");
+    ans.textContent = "Te espero, mi amor";
+    ans.classList.add("on");
+    confirmBtn.classList.add("done");
+    confirmBtn.setAttribute("aria-disabled", "true");
+    if (!RM) { burst(); setTimeout(burst, 450); }
+  });
+})();
+</script>
+</body>
+</html>
